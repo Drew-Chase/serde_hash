@@ -1,0 +1,15 @@
+[package]
+name = "serde_hash_derive"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1.0.208", features = ["derive"] }
+serde_hash_impl = { path = "../serde_hash_impl" }
+quote = "1.0.40"
+syn = "2.0.100"
+proc-macro2 = "1.0"
+
+
+[lib]
+proc-macro = true
