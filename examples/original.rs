@@ -1,3 +1,5 @@
+// This is an example of what would have to be done without the use of this library.
+
 use serde::de::Visitor;
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -94,7 +96,7 @@ impl<'de> Deserialize<'de> for TestData {
                             if vec.is_some() {
                                 return Err(serde::de::Error::duplicate_field("vec"));
                             } else if let Ok(vec_string) = map.next_value::<Vec<String>>() {
-                                let mut tmp:Vec<u8> = vec![];
+                                let mut tmp: Vec<u8> = vec![];
                                 for v in vec_string {
                                     if let Ok(u64_value) = decode_single(v) {
                                         tmp.push(u64_value as u8);
