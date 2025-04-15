@@ -17,8 +17,14 @@ path = "../examples/generate_salt.rs"
 [[example]]
 name = "deserialize"
 path = "../examples/deserialize.rs"
+[[example]]
+name = "vectors"
+path = "../examples/vectors.rs"
+[[example]]
+name = "original"
+path = "../examples/original.rs"
 
 
 [dev-dependencies]
 serde_json = { version = "1.0.140" }
-serde = { version = ">=1" }
+serde = { version = ">=1", features = ["derive"] }
