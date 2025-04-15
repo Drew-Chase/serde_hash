@@ -2,6 +2,10 @@
 name = "serde_hash_derive"
 version = "0.1.0"
 edition = "2024"
+authors = ["Drew Chase"]
+description = "Macro implmentation for the serde_hash library, not ment to be used on its own."
+license-file = "../LICENSE"
+repository = "https://github.com/Drew-Chase/serde_hash"
 
 [dependencies]
 quote = ">=1"
