@@ -13,7 +13,7 @@ pub struct TestData {
     // Regular numeric field that won't be hashed
     pub age: u8,
     #[hash]
-    pub vec: Vec<u64>,
+    pub vec: Vec<u8>,
 }
 
 fn main() {
