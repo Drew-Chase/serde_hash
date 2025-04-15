@@ -21,12 +21,30 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"  # If using JSON serialization
 ```
 
+## Supported Types
+
+The `#[hash]` attribute is only compatible with unsigned integer types such as `u64` and `u32`, and vectors of these types like `Vec<u64>` and `Vec<u32>`. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types or their vector equivalents.
+
+| Name                   | Type        |
+|------------------------|-------------|
+| 128bit Unsigned Int    | u128        |
+| 64bit Unsigned Int     | u64         |
+| 32bit Unsigned Int     | u32         |
+| 16bit Unsigned Int     | u16         |
+| 8bit Unsigned Int      | u8          |
+| Pointer-sized Int      | usize       |
+| Vector (128bit)        | Vec\<u128>  |
+| Vector (64bit)         | Vec\<u64>   |
+| Vector (64bit)         | Vec\<u64>   |
+| Vector (32bit)         | Vec\<u32>   |
+| Vector (16bit)         | Vec\<u16>   |
+| Vector (8bit)          | Vec\<u8>    |
+| Vector (Pointer-sized) | Vec\<usize> |
+
+
 ## Usage
 
-> ### Note:
-> The `#[hash]` attribute is only compatible with unsigned integer types such as `u64`, `u32`, `usize`, etc., and vectors of these types like `Vec<u64>`, `Vec<u32>`, `Vec<usize>`. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types or their vector equivalents.
-
-## Configuration Options
+### Configuration Options
 
 To customize your hash settings, such as the salt value or the minimum length of the generated hash strings, utilize the `SerdeHashOptions` builder. The following options are available:
 
