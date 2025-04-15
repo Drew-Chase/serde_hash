@@ -5,8 +5,8 @@ edition = "2024"
 readme = "../README.MD"
 
 [dependencies]
-serde_hash_derive = { path = "../serde_hash_derive" }
-serde_hash_impl = { path = "../serde_hash_impl" }
+serde_hash_derive = { path = "../serde_hash_derive", version = "0.1.0" }
+serde_hash_impl = { path = "../serde_hash_impl", version = "0.1.0" }
 
 [[example]]
 name = "basic"

@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 serde = { version = ">=1", features = ["derive"] }
-serde_hash_impl = { path = "../serde_hash_impl" }
+serde_hash_impl = { path = "../serde_hash_impl", version = "0.1.0" }
 quote = ">=1"
 syn = ">=2"
 proc-macro2 = ">=1.0"
