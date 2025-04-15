@@ -17,6 +17,7 @@ pub struct TestData {
 fn main() {
     // Configure the hash ID generator with custom settings
     // This affects how numeric IDs are converted to hash strings
+    // All of these fields are optional.
     SerdeHashOptions::new()
         // Set the cryptographic salt for the hash algorithm
         .with_salt("hello world")
