@@ -26,15 +26,26 @@ serde_json = "1.0"  # If using JSON serialization
 > ### Note:
 > The `#[hash]` attribute is only compatible with unsigned integer types such as `u64`, `u32`, `usize`, etc., and vectors of these types like `Vec<u64>`, `Vec<u32>`, `Vec<usize>`. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types or their vector equivalents.
 
-## Settings
+## Configuration Options
 
-To set your hashing settings, like the salt value you want or length of the generated hash string, use the `SerdeHashOptions` class.
+To customize your hash settings, such as the salt value or the minimum length of the generated hash strings, utilize the `SerdeHashOptions` builder. The following options are available:
 
 | Name       | Default Value            | Description                                     |
 |------------|--------------------------|-------------------------------------------------|
 | salt       | Generated randomly       | The cryptographic salt used for hash generation |
 | min_length | 8                        | Minimum length of the generated hash string     |
 | alphabet   | Alphanumeric (a-zA-Z0-9) | Characters used for hash encoding               |
+
+Simpliest example:
+
+```rust
+use serde_hash::hashids::SerdeHashOptions;
+fn main() {
+	SerdeHashOptions::new().build();
+}
+```
+
+A more complete example:
 
 ```rust
 use serde_hash::hashids::SerdeHashOptions;
@@ -208,14 +219,6 @@ fn main() {
 	// ...
 }
 ```
-
-## Configuration Options
-
-You can customize the hash ID generation with the following options:
-
-- **Salt**: A secret string that affects the generated hash. Different salts produce different hashes for the same input.
-- **Minimum Length**: The minimum character length of generated hash strings.
-- **Alphabet**: The set of characters used in the hash string. Default is alphanumeric.
 
 ## Why Use serde_hash?
 
