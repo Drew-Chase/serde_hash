@@ -2,6 +2,7 @@
 name = "serde_hash"
 version = "0.1.0"
 edition = "2024"
+readme = "../README.MD"
 
 [dependencies]
 serde_hash_derive = { path = "../serde_hash_derive" }
