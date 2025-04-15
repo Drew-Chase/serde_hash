@@ -155,9 +155,12 @@ dependencies = [
 name = "serde_hash"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "hash-ids",
+ "log",
+ "rand",
  "serde",
  "serde_hash_derive",
- "serde_hash_impl",
  "serde_json",
 ]
 
@@ -165,21 +168,8 @@ dependencies = [
 name = "serde_hash_derive"
 version = "0.1.0"
 dependencies = [
- "proc-macro2",
  "quote",
- "serde",
- "serde_hash_impl",
  "syn",
-]
-
-[[package]]
-name = "serde_hash_impl"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "hash-ids",
- "log",
- "rand",
 ]
 
 [[package]]

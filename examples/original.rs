@@ -3,7 +3,7 @@
 use serde::de::Visitor;
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use serde_hash_impl::hashids::{decode_single, encode_single, SerdeHashOptions};
+use serde_hash::hashids::{decode_single, encode_single, SerdeHashOptions};
 
 #[derive(Debug)]
 pub struct TestData {

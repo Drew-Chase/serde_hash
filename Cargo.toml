@@ -3,8 +3,7 @@ resolver = "3"
 members = [
     "serde_hash",
     "serde_hash_derive",
-    "serde_hash_impl",
 ]
 
-[path.crates.io]
+[patch.crates-io]
 serde_hash = { path = "serde_hash" }
