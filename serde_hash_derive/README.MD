@@ -1,2 +1,2 @@
 # Serde Hash Derive
-This is the macro implementation for the serde_hash library, not meant to be used on its own. Please see the full implementation of this library here [serde_hash](http://crates.io/serde_hash)
+This is the macro implementation for the serde_hash library, not meant to be used on its own. Please see the full implementation of this library here [serde_hash](http://crates.io/crates/serde_hash)
