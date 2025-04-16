@@ -11,7 +11,8 @@ pub struct TestData {
     // Regular string field that won't be hashed
     pub name: String,
     // Regular numeric field that won't be hashed
-    pub age: u8,
+    #[hash]
+    pub age: Option<u8>,
 }
 
 fn main() {
@@ -31,7 +32,7 @@ fn main() {
     let data = TestData {
         id: 158674,
         name: "Dan Smith".to_string(),
-        age: 47,
+        age: Some(47),
     };
 
     // Serialize the data to JSON string

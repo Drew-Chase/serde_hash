@@ -10,10 +10,12 @@ pub struct TestData {
     pub id: u64,
     // Regular string field that won't be hashed
     pub name: String,
-    // Regular numeric field that won't be hashed
-    pub age: u8,
     #[hash]
     pub vec: Vec<u8>,
+    #[hash]
+    pub optional_vec: Option<Vec<u16>>,
+    #[hash]
+    pub age: Option<usize>,
 }
 
 fn main() {
@@ -32,8 +34,9 @@ fn main() {
     let data = TestData {
         id: 158674,
         name: "Dan Smith".to_string(),
-        age: 47,
-        vec: vec![1,2,3,4,5,6,7,8,9,10]
+        age: Some(47),
+        vec: vec![1,2,3,4,5,6,7,8,9,10],
+        optional_vec: Some(vec![1,2,3,4,5,6,7,8,9,10])
     };
     
     // Serialize the data to JSON string
@@ -43,5 +46,5 @@ fn main() {
     let deserialized: TestData = serde_json::from_str(&json_string).unwrap();
 
     // Print both the original data object and its JSON representation
-    println!("{:?} -> {} -> {:?}", data, json_string, deserialized);
+    println!("{:?}\n-> {}\n-> {:?}", data, json_string, deserialized);
 }
