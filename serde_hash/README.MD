@@ -25,34 +25,27 @@ serde_json = "1.0"  # If using JSON serialization
 
 The `#[hash]` attribute is only compatible with unsigned integer types such as `u64` and `u32`, and vectors of these types like `Vec<u64>` and `Vec<u32>`. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types or their vector equivalents.
 
-| Name                         | Type                 |
-|------------------------------|----------------------|
-| 128bit Unsigned Int          | u128                 |
-| 64bit Unsigned Int           | u64                  |
-| 32bit Unsigned Int           | u32                  |
-| 16bit Unsigned Int           | u16                  |
-| 8bit Unsigned Int            | u8                   |
-| Pointer-sized Int            | usize                |
-| Optional 128bit Unsigned Int | Option\<u128>        |
-| Optional 64bit Unsigned Int  | Option\<u64>         |
-| Optional 32bit Unsigned Int  | Option\<u32>         |
-| Optional 16bit Unsigned Int  | Option\<u16>         |
-| Optional 8bit Unsigned Int   | Option\<u8>          |
-| Optional Pointer-sized Int   | Option\<usize>       |
-| Vector (128bit)              | Vec\<u128>           |
-| Vector (64bit)               | Vec\<u64>            |
-| Vector (64bit)               | Vec\<u64>            |
-| Vector (32bit)               | Vec\<u32>            |
-| Vector (16bit)               | Vec\<u16>            |
-| Vector (8bit)                | Vec\<u8>             |
-| Vector (Pointer-sized)       | Vec\<usize>          |
-| Optional Vector (128bit)     | Option\<Vec\<u128>>  |
-| Optional Vector (64bit)      | Option\<Vec\<u64>>   |
-| Optional Vector (32bit)      | Option\<Vec\<u32>>   |
-| Optional Vector (16bit)      | Option\<Vec\<u16>>   |
-| Optional Vector (8bit)       | Option\<Vec\<u8>>    |
-| Optional Vector (Pointer)    | Option\<Vec\<usize>> |
-
+| Name                         | Type           |
+|------------------------------|----------------|
+| 128bit Unsigned Int          | u128           |
+| 64bit Unsigned Int           | u64            |
+| 32bit Unsigned Int           | u32            |
+| 16bit Unsigned Int           | u16            |
+| 8bit Unsigned Int            | u8             |
+| Pointer-sized Int            | usize          |
+| Optional 128bit Unsigned Int | Option\<u128>  |
+| Optional 64bit Unsigned Int  | Option\<u64>   |
+| Optional 32bit Unsigned Int  | Option\<u32>   |
+| Optional 16bit Unsigned Int  | Option\<u16>   |
+| Optional 8bit Unsigned Int   | Option\<u8>    |
+| Optional Pointer-sized Int   | Option\<usize> |
+| Vector (128bit)              | Vec\<u128>     |
+| Vector (64bit)               | Vec\<u64>      |
+| Vector (64bit)               | Vec\<u64>      |
+| Vector (32bit)               | Vec\<u32>      |
+| Vector (16bit)               | Vec\<u16>      |
+| Vector (8bit)                | Vec\<u8>       |
+| Vector (Pointer-sized)       | Vec\<usize>    |
 
 ## Usage
 

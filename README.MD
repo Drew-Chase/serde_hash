@@ -46,12 +46,6 @@ The `#[hash]` attribute is only compatible with unsigned integer types such as `
 | Vector (16bit)               | Vec\<u16>            |
 | Vector (8bit)                | Vec\<u8>             |
 | Vector (Pointer-sized)       | Vec\<usize>          |
-| Optional Vector (128bit)     | Option\<Vec\<u128>>  |
-| Optional Vector (64bit)      | Option\<Vec\<u64>>   |
-| Optional Vector (32bit)      | Option\<Vec\<u32>>   |
-| Optional Vector (16bit)      | Option\<Vec\<u16>>   |
-| Optional Vector (8bit)       | Option\<Vec\<u8>>    |
-| Optional Vector (Pointer)    | Option\<Vec\<usize>> |
 
 
 ## Usage
