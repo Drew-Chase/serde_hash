@@ -1,6 +1,6 @@
 [package]
 name = "serde_hash_derive"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2024"
 authors = ["Drew Chase"]
 description = "Macro implementation for the serde_hash library, not meant to be used on its own."
@@ -11,7 +11,8 @@ readme = "README.MD"
 
 [dependencies]
 quote = ">=1"
-syn = ">=2"
+syn = { version = ">=2", features = ["full", "extra-traits"] }
+proc-macro2 = ">=1"
 
 [lib]
 proc-macro = true
