@@ -4,54 +4,40 @@ A Rust library for seamlessly integrating HashIds with Serde serialization and d
 
 ## Features
 
+- Extends serde's `Serialize` and `Deserialize` derives -- all serde attributes (`rename`, `alias`, `default`, `skip`, etc.) work alongside hash encoding
 - Automatically convert numeric IDs to hash strings during serialization
 - Transparently decode hash strings back to numeric IDs during deserialization
 - Configurable hash generation with customizable salt, minimum length, and character set
-- Simple attribute-based field marking with `#[hash]`
+- Simple attribute-based field marking with `#[serde(hash)]`
 - Secure random salt generation
 
 ## Installation
 
-Add `serde_hash` and `serde_hash_derive` to your `Cargo.toml`:
+Add `serde_hash` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-serde_hash = "0.1.3"
+serde_hash = "0.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"  # If using JSON serialization
 ```
 
 ## Supported Types
 
-The `#[hash]` attribute is only compatible with unsigned integer types such as `u64` and `u32`, and vectors of these types like `Vec<u64>` and `Vec<u32>`. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types or their vector equivalents.
+The `hash` attribute is only compatible with unsigned integer types and collections of them. It cannot be used with floating-point (`f32`, `f64`) or signed integer (`i32`, `i64`) types.
 
-| Name                         | Type           |
-|------------------------------|----------------|
-| 128bit Unsigned Int          | u128           |
-| 64bit Unsigned Int           | u64            |
-| 32bit Unsigned Int           | u32            |
-| 16bit Unsigned Int           | u16            |
-| 8bit Unsigned Int            | u8             |
-| Pointer-sized Int            | usize          |
-| Optional 128bit Unsigned Int | Option\<u128>  |
-| Optional 64bit Unsigned Int  | Option\<u64>   |
-| Optional 32bit Unsigned Int  | Option\<u32>   |
-| Optional 16bit Unsigned Int  | Option\<u16>   |
-| Optional 8bit Unsigned Int   | Option\<u8>    |
-| Optional Pointer-sized Int   | Option\<usize> |
-| Vector (128bit)              | Vec\<u128>     |
-| Vector (64bit)               | Vec\<u64>      |
-| Vector (64bit)               | Vec\<u64>      |
-| Vector (32bit)               | Vec\<u32>      |
-| Vector (16bit)               | Vec\<u16>      |
-| Vector (8bit)                | Vec\<u8>       |
-| Vector (Pointer-sized)       | Vec\<usize>    |
+| Category                     | Supported Types                                                  |
+|------------------------------|------------------------------------------------------------------|
+| Unsigned integers            | `u8`, `u16`, `u32`, `u64`, `u128`, `usize`                       |
+| Optional unsigned integers   | `Option<u8>`, `Option<u16>`, ..., `Option<usize>`                |
+| Vectors of unsigned integers | `Vec<u8>`, `Vec<u16>`, ..., `Vec<usize>`                         |
+| Optional vectors             | `Option<Vec<u8>>`, `Option<Vec<u16>>`, ..., `Option<Vec<usize>>` |
 
 ## Usage
 
 ### Configuration Options
 
-To customize your hash settings, such as the salt value or the minimum length of the generated hash strings, utilize the `SerdeHashOptions` builder. The following options are available:
+Customize hash settings with `SerdeHashOptions`. Call `.build()` once at startup before any serialization.
 
 | Name       | Default Value            | Description                                     |
 |------------|--------------------------|-------------------------------------------------|
@@ -59,196 +45,170 @@ To customize your hash settings, such as the salt value or the minimum length of
 | min_length | 8                        | Minimum length of the generated hash string     |
 | alphabet   | Alphanumeric (a-zA-Z0-9) | Characters used for hash encoding               |
 
-Simpliest example:
+Simplest example:
 
 ```rust
 use serde_hash::hashids::SerdeHashOptions;
-fn main() {
-	SerdeHashOptions::new().build();
-}
+SerdeHashOptions::new().build();
 ```
 
 A more complete example:
 
 ```rust
 use serde_hash::hashids::SerdeHashOptions;
-fn main() {
-	// Configure the hash ID generator with custom settings
-	// This affects how numeric IDs are converted to hash strings
-	// All of these fields are optional.
-	SerdeHashOptions::new()
-		// Set the cryptographic salt for the hash algorithm,
-		// By default, this is a randomly generated sequence of characters using the `generate_salt()` function.
-		.with_salt("hello world")
-		// Ensure generated hashes are at least 10 characters long,
-		// This value is 8 by default.
-		.with_min_length(10)
-		// Define the character set used in the hash encoding (alphanumeric in this case)
-		// Below is the default value.
-		.with_alphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
-		// This will save these values globally and is thread-safe.
-		.build();
-}
+SerdeHashOptions::new()
+.with_salt("hello world")
+.with_min_length(10)
+.with_alphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+.build();
 ```
 
 ### Basic Example
 
-To use `serde_hash` with your data structures, add the `HashIds` derive macro and mark the fields you want to hash with `#[hash]`:
+Place `#[serde_hash]` above your derive and mark fields with `#[serde(hash)]`. All standard serde attributes work alongside `hash`:
 
 ```rust
+use serde::{Serialize, Deserialize};
+use serde_hash::serde_hash;
 use serde_hash::hashids::SerdeHashOptions;
-use serde_hash_derive::HashIds;
 
-// Define your data structure with the HashIds derive macro
-#[derive(HashIds, Debug)]
+#[serde_hash]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct User {
-	// Mark numeric ID fields with #[hash]
-	#[hash]
+	#[serde(hash, alias = "identifier")]
 	pub id: u64,
-	// Regular fields remain unchanged
+	#[serde(rename = "user_name")]
 	pub name: String,
 	pub age: u8,
 }
 
 fn main() {
-	// Configure hash ID generation settings
 	SerdeHashOptions::new()
 		.with_salt("my-secret-salt")
 		.with_min_length(10)
 		.with_alphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 		.build();
 
-	// Create a data instance
 	let user = User {
 		id: 158674,
 		name: "Dan Smith".to_string(),
 		age: 47,
 	};
 
-	// Serialize to JSON - the ID will be automatically hashed
 	let json_string = serde_json::to_string(&user).unwrap();
 	println!("{:?} -> {}", user, json_string);
-	// Output: User { id: 158674, name: "Dan Smith", age: 47 } -> {"id":"qKknODM7Ej","name":"Dan Smith","age":47}
+	// Output: User { id: 158674, ... } -> {"id":"qKknODM7Ej","user_name":"Dan Smith","age":47}
 }
 ```
 
+Notice how `#[serde(hash, alias = "identifier")]` works -- `hash` triggers hash encoding while `alias` is handled by serde normally. The `rename` on `name` also works as expected.
+
 ### Deserialization Example
 
-The library seamlessly handles deserialization, converting the hash strings back to original numeric IDs:
+Hash strings are transparently decoded back to numeric IDs:
 
 ```rust
+use serde::{Serialize, Deserialize};
+use serde_hash::serde_hash;
 use serde_hash::hashids::SerdeHashOptions;
-use serde_hash_derive::HashIds;
 
-#[derive(HashIds, Debug)]
+#[serde_hash]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct User {
-	#[hash]
+	#[serde(hash)]
 	pub id: u64,
 	pub name: String,
 	pub age: u8,
 }
 
 fn main() {
-	// Configure hash ID settings (must match serialization settings)
 	SerdeHashOptions::new()
 		.with_salt("my-secret-salt")
 		.with_min_length(10)
 		.with_alphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 		.build();
 
-	// JSON string with hashed ID
-	let json_string = r#"{"id":"qKknODM7Ej","name":"Dan Smith","age":47}"#;
+	let user = User { id: 158674, name: "Dan Smith".to_string(), age: 47 };
+	let json = serde_json::to_string(&user).unwrap();
 
-	// Deserialize JSON string back to User struct
-	let user: User = serde_json::from_str(json_string).unwrap();
-
-	// The ID is automatically decoded back to its original numeric value
-	println!("Deserialized user: {:?}", user);
-	// Output: Deserialized user: User { id: 158674, name: "Dan Smith", age: 47 }
+	let deserialized: User = serde_json::from_str(&json).unwrap();
+	assert_eq!(user, deserialized);
 }
 ```
 
-### Using with Vectors
+### Using with Vectors and Options
 
-The `#[hash]` attribute can also be applied to vectors of unsigned integers. When applied to a vector field, each element in the vector will be hashed individually:
+`#[serde(hash)]` works with `Vec<T>`, `Option<T>`, and `Option<Vec<T>>` where `T` is an unsigned integer:
 
 ```rust
+use serde::{Serialize, Deserialize};
+use serde_hash::serde_hash;
 use serde_hash::hashids::SerdeHashOptions;
-use serde_hash_derive::HashIds;
 
-#[derive(HashIds, Debug)]
-pub struct DataWithVector {
-	#[hash]
+#[serde_hash]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DataWithCollections {
+	#[serde(hash)]
 	pub id: u64,
 	pub name: String,
-	// Vector of unsigned integers that will be hashed
-	#[hash]
+	#[serde(hash)]
 	pub values: Vec<u8>,
+	#[serde(hash)]
+	pub optional_id: Option<u32>,
+	#[serde(hash)]
+	pub optional_values: Option<Vec<u16>>,
 }
 
 fn main() {
-	// Configure hash ID generation settings
 	SerdeHashOptions::new()
 		.with_salt("my-secret-salt")
 		.build();
 
-	// Create a data instance with a vector
-	let data = DataWithVector {
+	let data = DataWithCollections {
 		id: 158674,
 		name: "Dan Smith".to_string(),
-		values: vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+		values: vec![1, 2, 3, 4, 5],
+		optional_id: Some(42),
+		optional_values: Some(vec![10, 20, 30]),
 	};
 
-	// Serialize to JSON - both the ID and each vector element will be hashed
-	let json_string = serde_json::to_string(&data).unwrap();
-	println!("{:?} -> {}", data, json_string);
+	let json = serde_json::to_string(&data).unwrap();
+	println!("{}", json);
 
-	// Deserialize back to the original structure
-	let deserialized: DataWithVector = serde_json::from_str(&json_string).unwrap();
-	println!("Deserialized: {:?}", deserialized);
+	let deserialized: DataWithCollections = serde_json::from_str(&json).unwrap();
+	println!("{:?}", deserialized);
 }
 ```
-
-When serialized, each value in the vector will be individually hashed, and during deserialization, each hashed string will be converted back to its original numeric value. This feature is useful when working with collections of IDs that need to be obfuscated in your API responses.
 
 ### Generating Secure Salt
 
-For production use, it's recommended to use a cryptographically secure random salt:
+For production use, generate a cryptographically secure random salt:
 
 ```rust
 use serde_hash::{hashids::SerdeHashOptions, salt::generate_salt};
-use serde_hash_derive::HashIds;
 
-#[derive(HashIds, Debug)]
-pub struct User {
-	#[hash]
-	pub id: u64,
-	pub name: String,
-}
-
-fn main() {
-	// Generate a secure random salt
-	let salt = generate_salt();
-	println!("Generated salt: {}", salt);
-
-	// Configure hash ID settings with the generated salt
-	SerdeHashOptions::new()
-		.with_salt(&salt)
-		.with_min_length(10)
-		.with_alphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
-		.build();
-
-	// Use the configured settings for serialization/deserialization
-	// ...
-}
+let salt = generate_salt();
+SerdeHashOptions::new()
+.with_salt( & salt)
+.with_min_length(10)
+.build();
 ```
+
+### How It Works
+
+The `#[serde_hash]` attribute macro runs **before** serde's derive macros. It transforms `#[serde(hash)]` into serde's `#[serde(with = "...")]` attribute, pointing to built-in serialize/deserialize functions that handle hash encoding. This means:
+
+- Serde's own derive generates the `Serialize`/`Deserialize` implementations
+- All serde attributes (`rename`, `alias`, `default`, `skip`, `flatten`, etc.) work normally
+- Hash encoding is applied only to the marked fields via serde's `with` mechanism
 
 ## Why Use serde_hash?
 
 - **Obfuscation**: Hide your internal database IDs from API consumers
-- **Predictability**: Unlike UUID generation, the same ID will always hash to the same string with the same settings
-- **Transparency**: Your application code can work with numeric IDs while your API exposes hash strings
-- **Simplicity**: Add one derive macro and configure once, no need to manually encode/decode IDs
+- **Serde compatible**: Works with all serde attributes and any serde-based format (JSON, TOML, MessagePack, etc.)
+- **Predictability**: Unlike UUID generation, the same ID always hashes to the same string with the same settings
+- **Transparency**: Your application code works with numeric IDs while your API exposes hash strings
+- **Simplicity**: Add one attribute macro and configure once
 
 ## License
 
