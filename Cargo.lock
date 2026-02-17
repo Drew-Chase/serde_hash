@@ -163,7 +163,7 @@ dependencies = [
 
 [[package]]
 name = "serde_hash"
-version = "0.1.4"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "hash-ids",
@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "serde_hash_derive"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
