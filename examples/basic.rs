@@ -1,17 +1,20 @@
+use serde::{Deserialize, Serialize};
 use serde_hash::hashids::SerdeHashOptions;
-use serde_hash::HashIds;
+use serde_hash::serde_hash;
 
-// TestData structure with HashIds derives macro for automated hash encoding/decoding
-// The structure includes a hashable ID field and regular non-hashed fields
-#[derive(HashIds, Debug)]
+// TestData structure using #[serde_hash] to extend serde's Serialize/Deserialize
+// with hash encoding. All standard serde attributes work alongside #[serde(hash)].
+#[serde_hash]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TestData {
     // Mark this field to be hashed during serialization and deserialization
-    #[hash]
+    #[serde(hash, alias = "identifier")]
     pub id: u64,
     // Regular string field that won't be hashed
+    #[serde(rename = "test_name")]
     pub name: String,
     // Regular numeric field that won't be hashed
-    #[hash]
+    #[serde(hash)]
     pub age: Option<u8>,
 }
 
@@ -36,7 +39,8 @@ fn main() {
     };
 
     // Serialize the data to JSON string
-    // The id field will be automatically hashed based on our HashIds implementation
+    // The id and age fields will be automatically hashed
+    // The name field will be renamed to "test_name" by serde
     let json_string = serde_json::to_string(&data).unwrap();
 
     // Print both the original data object and its JSON representation
